@@ -11,6 +11,7 @@ const Controller = {
     View.init();
     this.bindMenu();
     this.bindKeyboard();
+    this.bindMusic();
     this.bindAudioUnlock();
     this.bindContactForm();
   },
@@ -90,7 +91,7 @@ const Controller = {
     if (Model.state.reposLoaded) return;
     const { repos, live } = await Model.fetchRepos();
     const status = live
-      ? `${repos.length} repositories · live from GitHub`
+      ? `${repos.length} repositories · from GitHub`
       : "Showing pinned work · GitHub API unavailable right now";
     View.renderRepos(repos, status, Model);
     Model.state.reposLoaded = true;
@@ -109,10 +110,50 @@ const Controller = {
     if (this.audioUnlocked) View.playSelect();
   },
 
+  // The music widget handles its own first gesture, so a first click on the
+  // mute button starts the music instead of instantly muting it.
   bindAudioUnlock() {
-    const unlock = () => { this.audioUnlocked = true; };
-    addEventListener("pointerdown", unlock, { once: true, capture: true });
-    addEventListener("keydown", unlock, { once: true, capture: true });
+    const unlock = e => {
+      if (e.target instanceof Element && e.target.closest("#music")) return;
+      removeEventListener("pointerdown", unlock, true);
+      removeEventListener("keydown", unlock, true);
+      this.audioUnlocked = true;
+      this.syncMusic();
+    };
+    addEventListener("pointerdown", unlock, true);
+    addEventListener("keydown", unlock, true);
+  },
+
+  /* ---------- Background music ---------- */
+  bindMusic() {
+    Model.loadMusic();
+    View.renderMusic(Model.music);
+
+    View.els.musicBtn.addEventListener("click", () => {
+      const m = Model.music;
+      this.audioUnlocked = true;
+      if (!m.muted && View.els.bgm.paused) {
+        this.syncMusic();
+        return;
+      }
+      m.muted = !m.muted;
+      if (!m.muted && m.volume === 0) m.volume = 0.3;
+      this.syncMusic();
+    });
+
+    View.els.musicVol.addEventListener("input", e => {
+      this.audioUnlocked = true;
+      Model.music.volume = e.target.value / 100;
+      Model.music.muted = Model.music.volume === 0;
+      this.syncMusic();
+    });
+  },
+
+  syncMusic() {
+    View.renderMusic(Model.music);
+    Model.saveMusic();
+    if (Model.music.muted) View.pauseMusic();
+    else if (this.audioUnlocked) View.playMusic();
   },
 
   /* ---------- Input bindings ---------- */

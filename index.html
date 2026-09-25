@@ -19,17 +19,17 @@
   </svg>
   <!-- Per-screen menu artwork: assets/menus/<screen>.jpg
        Each falls back to the CSS stripes if its file is missing -->
-  <img class="menu-art" id="art-home" src="assets/menus/home.jpg" alt=""
-       onload="document.body.classList.add('has-art-home')" onerror="this.remove()">
+  <video class="menu-art" id="art-home" src="assets/menus/home.mp4" poster="assets/menus/home.png"
+         autoplay muted loop playsinline preload="auto"
+         onloadedmetadata="document.body.classList.add('has-art-home')" onerror="this.remove()"></video>
   <img class="menu-art" id="art-projects" src="assets/menus/projects.jpg" alt=""
        onload="document.body.classList.add('has-art-projects')" onerror="this.remove()">
-  <img class="menu-art" id="art-skills" src="assets/menus/skills.jpg" alt=""
+  <img class="menu-art" id="art-skills" src="assets/menus/skills.webp" alt=""
        onload="document.body.classList.add('has-art-skills')" onerror="this.remove()">
-  <img class="menu-art" id="art-about" src="assets/menus/about.jpg" alt=""
+  <img class="menu-art" id="art-about" src="assets/menus/about.webp" alt=""
        onload="document.body.classList.add('has-art-about')" onerror="this.remove()">
   <img class="menu-art" id="art-contact" src="assets/menus/contact.jpg" alt=""
        onload="document.body.classList.add('has-art-contact')" onerror="this.remove()">
-  <div class="bg-layer" id="bg-halftone"></div>
   <div class="bg-layer" id="bg-vignette"></div>
 </div>
 <div id="slash" aria-hidden="true"></div>
@@ -48,6 +48,7 @@
 <!-- Custom animated cursor + select sound -->
 <div id="cursor" aria-hidden="true"></div>
 <audio id="sfx-select" src="assets/sfx/select.mp3" preload="auto"></audio>
+<audio id="bgm" src="assets/sfx/bgm.mp3" preload="none" loop></audio>
 
 <div id="shell">
   <div id="hud-top">
@@ -69,16 +70,16 @@
       </p>
       <nav id="menu" aria-label="Sections">
         <button class="menu-item sel" data-target="projects">
-          <span class="ransom" data-ransom="PROJECTS"></span><span class="cursor-mark">◀</span>
+          <span class="ransom" data-ransom="PROJECTS"></span><span class="cursor-mark">▶</span>
         </button>
         <button class="menu-item" data-target="skills">
-          <span class="ransom" data-ransom="SKILLS"></span><span class="cursor-mark">◀</span>
+          <span class="ransom" data-ransom="SKILLS"></span><span class="cursor-mark">▶</span>
         </button>
         <button class="menu-item" data-target="about">
-          <span class="ransom" data-ransom="ABOUT"></span><span class="cursor-mark">◀</span>
+          <span class="ransom" data-ransom="ABOUT"></span><span class="cursor-mark">▶</span>
         </button>
         <button class="menu-item" data-target="contact">
-          <span class="ransom" data-ransom="CONTACT"></span><span class="cursor-mark">◀</span>
+          <span class="ransom" data-ransom="CONTACT"></span><span class="cursor-mark">▶</span>
         </button>
       </nav>
     </section>
@@ -111,26 +112,26 @@
           <img src="assets/me.jpg" alt="Bohdan Stepanenko" onerror="this.parentElement.remove()">
           <figcaption>Bohdan · Wrocław</figcaption>
         </figure>
-        <p class="quote">I'm a <strong>Frontend Developer</strong> who cares about the details users
-        feel but rarely notice: pages that load faster, data that updates by itself, and
-        interfaces that stay clean no matter how much is happening underneath.</p>
+        <p class="quote">Hi, I'm Bohdan. I'm a <strong>Frontend Developer</strong> from Ukraine,
+        now living in Wrocław, and I like building things people actually enjoy using.</p>
         <br>
-        <p>I build responsive web applications with <span class="stamp">React · TypeScript</span>
-        and Redux Toolkit. At <span class="stamp">GlobalLogic</span> I developed an internal task
-        controlling platform used across multiple teams, with task boards, filters, comments,
-        status workflows and role-based access control, and built 15+ reusable UI components
-        adopted by several product teams while cutting page load time by about 25%.</p>
+        <p>What pulls me into frontend is that it's the part of the product people touch.
+        A page that loads a second faster, a table that updates on its own, a button that's
+        exactly where you expect it to be: nobody writes a thank-you note for those, but
+        everyone feels the difference. That's the kind of work I enjoy most. Day to day I
+        work with <span class="stamp">React · TypeScript</span> and Redux Toolkit.</p>
         <br>
-        <p>Before that, at <span class="stamp">TenThousand</span>, I worked on a CRM platform for
-        customers, shipments and orders. I replaced manual page refreshes with WebSocket-based
-        real-time tracking, built an analytics dashboard that cut report preparation time by
-        around 40%, refactored the app into feature-based modules, and introduced runtime
-        configuration so one build deploys to every environment. Working side by side with
-        backend developers on REST, GraphQL and WebSocket contracts, I shipped 15+ production
-        features there.</p>
+        <p>So far I've worked in two very different teams. At <span class="stamp">TenThousand</span>
+        I helped build a CRM for shipments and orders, where I learned how much a good
+        conversation with a backend developer can save you later. At
+        <span class="stamp">GlobalLogic</span> I worked on an internal platform used by several
+        teams to plan and track their work, and made components other teams could reuse
+        instead of rewriting.</p>
         <br>
-        <p>I speak Ukrainian and Russian natively, plus Polish and English at B2 level.
-        You can explore my repositories at
+        <p>Outside of work I keep building side projects, from a Spotify-style music app to
+        a React Native app for finding places nearby, and yes, this Persona-themed portfolio
+        too. I speak Ukrainian, Russian, Polish and English, so I'm comfortable in pretty much
+        any team here. If you'd like to see how I write code, it's all on
         <a href="https://github.com/StepBohdan" target="_blank" rel="noopener">github.com/StepBohdan</a>.</p>
       </div>
       <a class="cv-btn" href="assets/cv/BohdanStepanenkoCV.pdf" download="BohdanStepanenkoCV.pdf">
@@ -139,7 +140,7 @@
     </section>
 
     <!-- CONTACT -->
-    <section class="screen sub align-right" id="screen-contact" aria-label="Contact">
+    <section class="screen sub" id="screen-contact" aria-label="Contact">
       <div class="screen-head"><span class="ransom" data-ransom="CONTACT"></span></div>
       <button class="back-hint" data-back>ESC · Back</button>
       <div class="paper" style="max-width:620px">
@@ -185,6 +186,27 @@
     <span><span class="key">Enter</span>Confirm</span>
     <span><span class="key">Esc</span>Back</span>
     <span style="margin-left:auto;opacity:.8" id="clock"></span>
+    <!-- Background music: hover shows the volume slider, click mutes -->
+    <div id="music">
+      <div class="music-pop">
+        <div class="music-panel">
+          <span id="music-val">30</span>
+          <input type="range" id="music-vol" min="0" max="100" step="1" value="30" aria-label="Music volume">
+        </div>
+      </div>
+      <button id="music-btn" type="button" aria-label="Mute music" aria-pressed="false">
+        <svg viewBox="0 0 32 32" aria-hidden="true">
+          <polygon points="3,12 9,12 17,5 17,27 9,20 3,20" fill="currentColor"/>
+          <g class="waves" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square">
+            <path d="M21 11.5q3 4.5 0 9"/>
+            <path d="M25 7.5q6 8.5 0 17"/>
+          </g>
+          <g class="x" stroke="currentColor" stroke-width="3.5" stroke-linecap="square">
+            <path d="M21 11l9 10M30 11l-9 10"/>
+          </g>
+        </svg>
+      </button>
+    </div>
   </div>
 </div>
 

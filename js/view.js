@@ -18,6 +18,11 @@ const View = {
     sfx:        document.getElementById("sfx-select"),
     cursor:     document.getElementById("cursor"),
     clock:      document.getElementById("clock"),
+    bgm:        document.getElementById("bgm"),
+    music:      document.getElementById("music"),
+    musicBtn:   document.getElementById("music-btn"),
+    musicVol:   document.getElementById("music-vol"),
+    musicVal:   document.getElementById("music-val"),
   },
 
   init() {
@@ -86,6 +91,28 @@ const View = {
     setTimeout(done, 720);
   },
 
+  /* ---------- Background music ---------- */
+  renderMusic({ volume, muted }) {
+    const { bgm, music, musicBtn, musicVol, musicVal } = this.els;
+    const pct = Math.round(volume * 100);
+    bgm.volume = volume;
+    music.classList.toggle("muted", muted);
+    musicBtn.setAttribute("aria-pressed", muted);
+    musicBtn.setAttribute("aria-label", muted ? "Unmute music" : "Mute music");
+    musicVol.value = pct;
+    musicVol.style.setProperty("--p", pct + "%");
+    musicVal.textContent = pct;
+  },
+
+  playMusic() {
+    const p = this.els.bgm.play();
+    if (p && p.catch) p.catch(() => {});
+  },
+
+  pauseMusic() {
+    this.els.bgm.pause();
+  },
+
   /* ---------- Sound ---------- */
   playSelect() {
     try {
@@ -134,16 +161,15 @@ const View = {
       a.href = r.html_url; a.target = "_blank"; a.rel = "noopener";
       a.style.setProperty("--tilt", ((this.hash(r.name) % 5) - 2) * 0.8 + "deg");
       a.style.setProperty("--d", i * 70 + "ms");
-      a.style.setProperty("--lc", model.langColors[r.language] || "#e60012");
+      a.style.setProperty("--lc", model.langColors[r.language] || "#1e7bff");
       const pretty = r.name.replace(/[-_]/g, " ").replace(/\b\w/g, c => c.toUpperCase());
       const img = model.projectImages[r.name] || `assets/projects/${r.name}.png`;
       a.innerHTML = `
         ${this.cardThumb(img)}
         <span class="lang">${r.language || "Repo"}</span>
         <h3>${this.splitTitle(pretty)}</h3>
-        <p>${r.description || "No description yet, but the code speaks for itself."}</p>
+        <p>${r.description || model.repoDescriptions[r.name] || "No description yet, but the code speaks for itself."}</p>
         <div class="meta">
-          <span>★ ${r.stargazers_count || 0}</span>
           <span class="go">View on GitHub →</span>
         </div>`;
       this.els.repoGrid.appendChild(a);
@@ -188,7 +214,6 @@ const View = {
   startParallax() {
     if (this.reducedMotion) return;
     const stripes = document.getElementById("bg-stripes");
-    const halftone = document.getElementById("bg-halftone");
     const arts = [...document.querySelectorAll(".menu-art")];
     let tx = 0, ty = 0, cx = 0, cy = 0;
     addEventListener("mousemove", e => {
@@ -198,7 +223,6 @@ const View = {
     const loop = () => {
       cx += (tx - cx) * 0.06; cy += (ty - cy) * 0.06;
       stripes.style.transform = `translate(${cx * 22}px, ${cy * 14}px)`;
-      halftone.style.transform = `translate(${cx * -34}px, ${cy * -22}px)`;
       arts.forEach(a => {
         if (a.isConnected)
           a.style.transform = `translate(${cx * 14}px, ${cy * 9}px) scale(1.04)`;
